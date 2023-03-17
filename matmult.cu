@@ -1,7 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <vector>
-#include <iostream>
 
 __global__
 void add(double *a, double *b, double *c, long size){
