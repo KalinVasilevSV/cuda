@@ -5,7 +5,10 @@
 
 __global__
 void add(double *a, double *b, double *c, long size){
-   for (long i=0; i < size; i++)
+  long index = threadIdx.x;
+  long stride = blockDim.x;
+
+   for (long i=index; i < size; i+=stride)
      for (long j=0; j < size; j++){
        c[i*size+j] = 0.0;
        for (long k=0; k < size; k++)
@@ -32,16 +35,17 @@ int main(int argc, char *argv[])
   B[1][0] = 9.0;  B[1][1] = 10.0; B[1][2] = 0.0;
   B[2][0] = 8.0;  B[2][1] = 5.0;  B[2][2] = 1.0;
 
-  printf("test matrix ... \n");
+  printf("test matrix A... \n");
     for(int i=0;i<size;i++){
         for(int j=0;j<size;j++)
-            printf("%f ",A[i][j]);
+            printf("%4.1f ",A[i][j]);
         printf("\n");
     }
 
+  printf("test matrix B... \n");
     for(int i=0;i<size;i++){
         for(int j=0;j<size;j++)
-            printf("%f ",B[i][j]);
+            printf("%4.1f ",B[i][j]);
         printf("\n");
     }
 
@@ -65,7 +69,7 @@ int main(int argc, char *argv[])
 //        c[i]=0.5;
 //    }
 
-    add<<<1,1>>>(a,b,c,size);
+    add<<<1,3>>>(a,b,c,size);
 
     cudaDeviceSynchronize();
 
@@ -74,7 +78,7 @@ int main(int argc, char *argv[])
 
     for (long i=0; i < size; i++){
         for (long j=0; j < size; j++)
-            printf("%f ", c[i*size+j]);
+            printf("%4.1f ", c[i*size+j]);
         printf("\n");
     }
 
